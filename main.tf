@@ -2,6 +2,10 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
+resource "aws_kms_key" "example_key" {
+  enable_key_rotation = true
+}
+
 #tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "example" {
   bucket = "test-example-bucket-999"
@@ -9,8 +13,8 @@ resource "aws_s3_bucket" "example" {
   server_side_encryption_configuration {
    rule {
      apply_server_side_encryption_by_default {
-       kms_master_key_id = "arn"
-       sse_algorithm     = "aws:kms"
+       kms_master_key_id = aws_kms_key.example_key.arn
+       sse_algorithm = "aws:kms"
      }
    }
   }
