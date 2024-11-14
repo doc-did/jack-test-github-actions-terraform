@@ -5,6 +5,15 @@ provider "aws" {
 #tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "example" {
   bucket = "test-example-bucket-999"
+
+  server_side_encryption_configuration {
+   rule {
+     apply_server_side_encryption_by_default {
+       kms_master_key_id = "arn"
+       sse_algorithm     = "aws:kms"
+     }
+   }
+  }
 }
 
 resource "aws_s3_bucket_ownership_controls" "example" {
